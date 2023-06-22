@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Personal Finance Tracker</title>
+    <style>
+        body {
+            background-color: #dddddd;
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 15px;
+        }
+
+        .container {
+            margin: 20px auto;
+            max-width: 300px;
+            padding: 20px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 5px;
+            padding-top: 20px;
+            padding-bottom: 0.1px;
+        }
+
+        .transactions-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            padding-top: 5px;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        form label {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        form input[type="date"],
+        form select,
+        form input[type="number"] {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 250px;
+            box-sizing: border-box;
+        }
+
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #097969;
+            color: white;
+            text-align: left;
+        }
+
+        /* Custom styles for description textarea */
+        textarea {
+            resize: vertical; /* Allow vertical resizing */
+            max-width: 100%; /* Ensure it stays within the container */
+            width: 100%; /* Take up the full width */
+        }
+
+        /* Add Transaction button styles */
+        input[type="submit"] {
+            background-color: #097969;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            width: 50%;
+            height: 30px;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Personal Finance Tracker</h1>
+    <div class="container">
+        <div class="form-container">
+            <form action="/add_transaction" method="post">
+                <label for="date">Date:</label>
+                <input type="date" name="date" required>
+                <label for="category">Category:</label>
+                <select name="category" required>
+                    <option value="Housing/Rent">Housing/Rent</option>
+                    <option value="Utilities">Utilities</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Food/Groceries">Food/Groceries</option>
+                    <option value="Health/Medical">Health/Medical</option>
+                    <option value="Insurance">Insurance</option>
+                    <option value="Debt Payments">Debt Payments</option>
+                    <option value="Personal Care">Personal Care</option>
+                    <option value="Entertainment/Leisure">Entertainment/Leisure</option>
+                    <option value="Education">Education</option>
+                    <option value="Savings/Investments">Savings/Investments</option>
+                    <option value="Clothing/Apparel">Clothing/Apparel</option>
+                    <option value="Gifts/Donations">Gifts/Donations</option>
+                    <option value="Childcare/Education">Childcare/Education</option>
+                    <option value="Home Maintenance">Home Maintenance</option>
+                    <option value="Taxes">Taxes</option>
+                    <option value="Miscellaneous/Other">Miscellaneous/Other</option>
+                </select>
+                <label for="description">Description:</label>
+                <textarea name="description" rows="4" required></textarea>
+                <label for="amount">Amount:</label>
+                <input type="number" name="amount" step="any" required min="0">
+                <input type="submit" value="Add Transaction">
+            </form>
+          <hr><br>
+            <form action="/show_summary" method="post">
+                <input type="submit" value="Show Summary">
+            </form>
+        </div>
+    </div>
+
+    <div class="transactions-container">
+        <center><h2>Transaction List</h2></center>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction['date'] }}</td>
+                    <td>{{ transaction['description'] }}</td>
+                    <td>{{ transaction['amount'] }}</td>
+                    <td>{{ transaction['category'] }}</td>
+                </tr>
+                {% endfor %}
+                {% if not transactions %}
+                <tr>
+                    <td colspan="4">No transactions available.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+        {% if show_summary %}
+        <center><h2>Expense Summary</h2></center>
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Total Expenses</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category, total_expense in expense_summary.items() %}
+                <tr>
+                    <td>{{ category }}</td>
+                    <td>{{ total_expense }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</body>
+</html>
